@@ -1,16 +1,30 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
+@layer base {
+  body {
+    font-family: "Segoe UI", "Ubuntu", "Helvetica";
+    @apply dark:bg-black dark:text-gray-200;
+  }
+  input:focus-within ~ label,
+  input:not(:placeholder-shown) ~ label {
+    @apply transform scale-75 -translate-y-3;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  input:focus-within ~ label {
+    @apply text-blue-500;
+  }
 
-* {
-  box-sizing: border-box;
+  .main-border {
+    @apply border-2 border-gray-100 dark:border-gray_dark;
+  }
+
+  .main-border-x {
+    @apply border-r-2 border-l-2 border-gray-100 dark:border-gray_dark;
+  }
+
+  .error-label {
+    @apply text-red-500 text-xs italic;
+  }
 }

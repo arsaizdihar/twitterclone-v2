@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String         @id @default(cuid())
+  displayName String
+  email       String         @unique
+  username    String         @unique
+  password    Password?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  bio         String         @default("") @db.Text
+  private     Boolean        @default(false)
+  tweets      Tweet[]
+  likes       TweetLike[]
+  retweets    TweetRetweet[]
+}
+
+model Password {
+  hash   String
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Tweet {
+  id          String         @id @default(cuid())
+  createdAt   DateTime       @default(now())
+  text        String         @db.Text
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commentToId String?
+  commentTo   Tweet?         @relation("Comment", fields: [commentToId], references: [id], onDelete: Cascade)
+  comments    Tweet[]        @relation("Comment")
+  imageUrls   String[]
+  likes       TweetLike[]
+  retweets    TweetRetweet[]
+}
+
+model TweetLike {
+  tweetId   String
+  userId    String
+  createdAt DateTime @default(now())
+  tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tweetId, userId])
+}
+
+model TweetRetweet {
+  tweetId   String
+  userId    String
+  createdAt DateTime @default(now())
+  tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tweetId, userId])
+}
