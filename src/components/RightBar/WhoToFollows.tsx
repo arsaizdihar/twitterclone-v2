@@ -54,7 +54,7 @@ const WhoToFollow: React.FC<{
       <div className="flex">
         <ProfilePic src={user.photoUrl} />
         <div className="leading-none ml-2">
-          <Link href={`/user/${user.username}`} passHref>
+          <Link href={`/${user.username}`} passHref>
             <h4 className="font-bold text-base hover:underline">
               {user.displayName} {user.private && <Private />}
               {user.verified && <Verified />}

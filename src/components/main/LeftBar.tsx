@@ -18,12 +18,11 @@ import React, { useState } from "react";
 import { useUser } from "../AuthContext";
 import { Private, ThreeDots, Verified } from "../icons";
 import Modal from "../Modal";
+import { useNavigationOpen } from "../NavigationContext";
 import ProfilePic from "../profile/ProfilePic";
 
-const LeftBar: React.FC<{
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ isOpen, setIsOpen }) => {
+const LeftBar: React.FC<{}> = () => {
+  const { isOpen, setIsOpen } = useNavigationOpen();
   const user = useUser();
   const router = useRouter();
   const [openMore, setOpenMore] = useState(false);
@@ -228,7 +227,7 @@ const LeftBar: React.FC<{
             icon={faUser}
             current={router.asPath === `/user/${user.username}`}
             name="Profile"
-            href={`/user/${user.username}`}
+            href={`/${user.username}`}
           />
           <button className="flex group cursor-pointer" onClick={showMoreMenu}>
             <div className="flex items-center rounded-full group-hover:bg-blue-100 dark:group-hover:bg-gray-800 group-hover:bg-opacity-80 group-hover:text-blue-500 dark:group-hover:text-gray-200 text-gray-600 dark:text-gray-200">
@@ -278,7 +277,7 @@ const LeftBar: React.FC<{
       )}
       {user !== null && (
         <div className="flex-grow sm:flex items-end pb-2 hidden">
-          <Link href={`/user/${user.username}`}>
+          <Link href={`/${user.username}`}>
             <a className="flex items-center rounded-full cursor-pointer xl:hover:bg-blue-100 xl:dark:hover:bg-neutral-800 pt-1 pr-2 xl:px-2 xl:flex-grow">
               <ProfilePic
                 src={user.photoUrl}

@@ -3,13 +3,13 @@ import { useQuery } from "react-query";
 import { ITweet } from "~/type";
 import { request } from "~/utils/api";
 import { useUser } from "./AuthContext";
+import { useNavigationOpen } from "./NavigationContext";
 import ProfilePic from "./profile/ProfilePic";
 import Tweet from "./tweet/Tweet";
 import TweetInput from "./tweet/TweetInput";
 
-const Main: React.FC<{
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ setIsOpen }) => {
+const Main: React.FC<{}> = () => {
+  const { setIsOpen } = useNavigationOpen();
   const user = useUser();
   const { data: tweets } = useQuery<ITweet[]>(
     "tweets",

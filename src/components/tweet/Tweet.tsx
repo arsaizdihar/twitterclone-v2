@@ -69,7 +69,7 @@ const Tweet: React.FC<{
       </div>
       <div className="flex flex-col flex-grow px-2">
         <div className="flex items-center max-w-full flex-wrap relative">
-          <Link href={`/user/${sender.username}`}>
+          <Link href={`/${sender.username}`}>
             <a className="font-bold hover:underline">{sender.displayName}</a>
           </Link>
           {sender.private && <Private />}

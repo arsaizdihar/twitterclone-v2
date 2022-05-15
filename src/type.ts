@@ -1,4 +1,4 @@
-import { Tweet } from "@prisma/client";
+import { Tweet, User } from "@prisma/client";
 
 export interface ISimpleUser {
   id: string;
@@ -19,4 +19,15 @@ export type ITweet = Tweet & {
     likes: number;
     retweets: number;
   };
+};
+
+export type IUserProfile = User & {
+  followers: { id: string }[];
+  _count: {
+    followers: number;
+    following: number;
+    tweets: number;
+  };
+  createdAt: string;
+  updatedAt: string;
 };

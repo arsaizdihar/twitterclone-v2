@@ -10,7 +10,7 @@ const ProfilePic: React.FC<{
 }> = ({ src, username, notLink }) => {
   const router = useRouter();
   return !notLink ? (
-    <Link href={`${username ? `/user/${username}` : "/"}`}>
+    <Link href={`${username ? `/${username}` : "/"}`}>
       <a className="w-12 h-12 cursor-pointer">
         <Image
           src={(src as any) || "/img/profile.jpeg"}
