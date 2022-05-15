@@ -5,5 +5,5 @@ export interface ISimpleUser {
   displayName: string;
   private: boolean;
   verified: boolean;
-  photoUrl?: string;
+  photoUrl: string | null;
 }
