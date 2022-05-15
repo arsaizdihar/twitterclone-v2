@@ -1,4 +1,5 @@
 import { Dialog } from "@headlessui/react";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import InputForm from "~/components/forms/InputForm";
 import Head from "~/components/Head";
@@ -34,14 +35,25 @@ function LoginPage() {
 
   const [loginErrors, setLoginErrors] = useState<LoginErrors>({});
   const [registerErrors, setRegisterErrors] = useState<RegisterErrors>({});
+  const router = useRouter();
   const [isRegister, setIsRegister] = useState(false);
   const handleRegisterForm: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    register(registerState).then((data) => console.log(data));
+    register(registerState)
+      .then((data) => {
+        router.push("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   const handleLoginForm: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    login(loginState).then((data) => console.log(data));
+    login(loginState)
+      .then((data) => router.push("/"))
+      .catch((err) =>
+        setLoginErrors({ password: "Incorrect username or password" })
+      );
   };
   return (
     <>

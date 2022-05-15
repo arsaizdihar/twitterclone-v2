@@ -1,14 +1,14 @@
-import { User } from "@prisma/client";
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
   GetServerSidePropsResult,
 } from "next";
+import { ISimpleUser } from "~/type";
 import getUser from "./getUser";
 
 type Handler = (
   ctx: GetServerSidePropsContext,
-  user: User | null
+  user: ISimpleUser | null
 ) => Promise<GetServerSidePropsResult<any>>;
 
 type WithSessionConfig = {

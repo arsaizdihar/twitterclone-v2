@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import nextConnect from "next-connect";
 import db from "~/server/prisma";
+import signJWT from "~/server/signJWT";
 
 const handler = nextConnect<NextApiRequest, NextApiResponse>();
 
@@ -18,6 +19,7 @@ handler.post(async (req, res) => {
       },
     },
   });
+  signJWT(user, req, res);
   return res.status(201).json(user);
 });
 

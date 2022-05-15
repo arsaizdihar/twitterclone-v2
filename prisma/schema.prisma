@@ -20,6 +20,8 @@ model User {
   updatedAt   DateTime       @updatedAt
   bio         String         @default("") @db.Text
   private     Boolean        @default(false)
+  verified    Boolean        @default(false)
+  photoUrl    String?
   tweets      Tweet[]
   likes       TweetLike[]
   retweets    TweetRetweet[]

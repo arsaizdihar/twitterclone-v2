@@ -12,6 +12,15 @@ const getUser = async (req: OptionsType["req"], res: OptionsType["res"]) => {
     if (typeof decoded !== "object") return null;
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        displayName: true,
+        private: true,
+        verified: true,
+        photoUrl: true,
+      },
     });
     return user;
   } catch (error) {

@@ -1,4 +1,6 @@
-async function request({
+import axios from "axios";
+
+export async function request({
   url,
   method,
   body,
@@ -7,14 +9,14 @@ async function request({
   method?: string;
   body?: any;
 }) {
-  return await fetch(url, {
+  return await axios(url, {
     method,
     headers: {
       "Content-Type": "application/json",
     },
-    body: body ? JSON.stringify(body) : undefined,
-    credentials: "include",
-  }).then((res) => res.json());
+    withCredentials: true,
+    data: body,
+  }).then((res) => res.data);
 }
 
 export async function register(data: any) {
