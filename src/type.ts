@@ -1,3 +1,5 @@
+import { Tweet } from "@prisma/client";
+
 export interface ISimpleUser {
   id: string;
   email: string;
@@ -7,3 +9,14 @@ export interface ISimpleUser {
   verified: boolean;
   photoUrl: string | null;
 }
+
+export type ITweet = Tweet & {
+  user: ISimpleUser;
+  createdAt: string;
+  isLiked: boolean;
+  _count: {
+    comments: number;
+    likes: number;
+    retweets: number;
+  };
+};

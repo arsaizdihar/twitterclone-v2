@@ -1,12 +1,23 @@
 import React from "react";
+import { useQuery } from "react-query";
+import { ITweet } from "~/type";
+import { request } from "~/utils/api";
 import { useUser } from "./AuthContext";
 import ProfilePic from "./profile/ProfilePic";
+import Tweet from "./tweet/Tweet";
 import TweetInput from "./tweet/TweetInput";
 
 const Main: React.FC<{
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ setIsOpen }) => {
   const user = useUser();
+  const { data: tweets } = useQuery<ITweet[]>(
+    "tweets",
+    () => request({ url: "/api/tweets", method: "GET" }),
+    {
+      refetchOnMount: false,
+    }
+  );
   // useEffect(() => {
   //   const tweetsData = data?.tweets?.edges;
   //   if (!fetching && tweetsData) {
@@ -36,6 +47,11 @@ const Main: React.FC<{
         </div>
       </div>
       {user !== null && <TweetInput resetPage={() => null} />}
+      <div>
+        {tweets?.map((tweet) => (
+          <Tweet key={tweet.id} tweet={tweet} />
+        ))}
+      </div>
       {/* <InfiniteScroll
         dataLength={page} //This is important field to render the next data
         next={() => setPage(page + 1)}

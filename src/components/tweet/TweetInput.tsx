@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from "react";
 import { postTweet } from "~/utils/api/tweet";
+import queryClient from "~/utils/queryClient";
 import { useUser } from "../AuthContext";
 import ProfilePic from "../profile/ProfilePic";
 
@@ -22,6 +23,12 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
       postTweet(tweetInput).then((data) => {
         console.log(data);
         setTweetInput("");
+        queryClient.setQueryData<any[]>("tweets", (oldData) => {
+          if (!oldData) {
+            return [data];
+          }
+          return [data, ...oldData];
+        });
         // const tweet = { ...data?.tweet, user } as tweetObject;
         // if (data?.success) {
         //   setTweetInput("");
