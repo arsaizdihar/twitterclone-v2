@@ -13,12 +13,16 @@ const ReplyInput: React.FC<{ tweetUser: ISimpleUser; tweetId: string }> = ({
   const user = useUser();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [tweetInput, setTweetInput] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+  const [images, setImages] = useState<File[]>([]);
   const imageInput = useRef<HTMLInputElement>(null);
   const handleTweetSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
     if (tweetInput.length > 0 && user) {
-      postTweet(tweetInput, tweetId).then((data) => {
+      const formData = new FormData();
+      formData.append("text", tweetInput);
+      formData.append("replyTo", tweetId);
+      images.forEach((image) => formData.append("files", image));
+      postTweet(formData).then((data) => {
         queryClient.setQueryData(["replies", tweetId], (oldData: any) => {
           if (!oldData) {
             return {
@@ -31,6 +35,7 @@ const ReplyInput: React.FC<{ tweetUser: ISimpleUser; tweetId: string }> = ({
           return oldData;
         });
         setTweetInput("");
+        setImages([]);
       });
     }
   };
@@ -58,14 +63,15 @@ const ReplyInput: React.FC<{ tweetUser: ISimpleUser; tweetId: string }> = ({
               value={tweetInput}
               onChange={(e) => setTweetInput(e.target.value)}
             ></textarea>
-            {image && (
+            {images.map((image, idx) => (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img
+                key={idx}
                 src={URL.createObjectURL(image)}
                 alt={image.name}
                 className="h-40 object-contain"
               ></img>
-            )}
+            ))}
           </div>
           <hr className="my-4 dark:border-gray-600" />
           <div className="flex">
@@ -73,15 +79,16 @@ const ReplyInput: React.FC<{ tweetUser: ISimpleUser; tweetId: string }> = ({
               type="file"
               className="hidden"
               accept="image/*"
+              multiple
               ref={imageInput}
               onChange={(e) => {
                 if (e.target.files) {
-                  const image = e.target.files[0];
-                  if (image.size <= 5242880) {
-                    setImage(image);
-                  } else {
-                    alert("Maximum size is 5 MB");
-                  }
+                  const images = [];
+                  Array.from(e.target.files).forEach((image) => {
+                    if (image.size < 5000000) {
+                      images.push(image);
+                    }
+                  });
                 }
               }}
             />
