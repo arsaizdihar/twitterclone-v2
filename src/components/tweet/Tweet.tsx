@@ -4,8 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import { InfiniteData } from "react-query";
 import { ITweet } from "~/type";
+import { likeTweet } from "~/utils/api/tweet";
 import { getTweetTimeString } from "~/utils/getTweetTimeString";
+import queryClient from "~/utils/queryClient";
 import { useUser } from "../AuthContext";
 import { Private, ThreeDots, Verified } from "../icons";
 import Modal from "../Modal";
@@ -22,6 +25,34 @@ const Tweet: React.FC<{
     if (showMenu) modalRef.current?.focus();
   }, [showMenu]);
   const handleLike = () => {
+    likeTweet(tweet.id).then(() => {
+      queryClient.setQueryData<
+        InfiniteData<{
+          tweets: ITweet[];
+          count: number;
+        }>
+      >("tweets", (oldData) => {
+        if (!oldData) {
+          return {
+            pages: [{ tweets: [tweet], count: 1 }],
+            pageParams: [undefined],
+          };
+        }
+        oldData.pages.forEach((page) => {
+          let found = false;
+          page.tweets.forEach((t) => {
+            if (t.id === tweet.id) {
+              t.isLiked = !t.isLiked;
+              t._count.likes += t.isLiked ? 1 : -1;
+              found = true;
+              return;
+            }
+          });
+          if (found) return;
+        });
+        return oldData;
+      });
+    });
     // likeTweet({ variables: { tweetId: tweet.pk } }).then((res) => {
     //   if (res.data?.likeTweet?.success) {
     //     apolloClient.refetchQueries({ include: [GetTweetsDocument] });
