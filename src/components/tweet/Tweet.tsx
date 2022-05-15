@@ -3,6 +3,7 @@ import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { InfiniteData } from "react-query";
 import { ITweet } from "~/type";
@@ -14,6 +15,37 @@ import { Private, ThreeDots, Verified } from "../icons";
 import Modal from "../Modal";
 import ProfilePic from "../profile/ProfilePic";
 
+function updateQueryWrapper(tweet: any) {
+  return (
+    oldData:
+      | InfiniteData<{
+          tweets: ITweet[];
+          count: number;
+        }>
+      | undefined
+  ) => {
+    if (!oldData) {
+      return {
+        pages: [{ tweets: [tweet], count: 1 }],
+        pageParams: [undefined],
+      };
+    }
+    oldData.pages.forEach((page) => {
+      let found = false;
+      page.tweets.forEach((t) => {
+        if (t.id === tweet.id) {
+          t.isLiked = !t.isLiked;
+          t._count.likes += t.isLiked ? 1 : -1;
+          found = true;
+          return;
+        }
+      });
+      if (found) return;
+    });
+    return oldData;
+  };
+}
+
 const Tweet: React.FC<{
   tweet: ITweet;
 }> = ({ tweet }) => {
@@ -21,43 +53,26 @@ const Tweet: React.FC<{
   const [showMenu, setShowMenu] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
   const modalRef = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
   useEffect(() => {
     if (showMenu) modalRef.current?.focus();
   }, [showMenu]);
   const handleLike = () => {
     likeTweet(tweet.id).then(() => {
-      queryClient.setQueryData<
-        InfiniteData<{
-          tweets: ITweet[];
-          count: number;
-        }>
-      >("tweets", (oldData) => {
-        if (!oldData) {
-          return {
-            pages: [{ tweets: [tweet], count: 1 }],
-            pageParams: [undefined],
-          };
-        }
-        oldData.pages.forEach((page) => {
-          let found = false;
-          page.tweets.forEach((t) => {
-            if (t.id === tweet.id) {
-              t.isLiked = !t.isLiked;
-              t._count.likes += t.isLiked ? 1 : -1;
-              found = true;
-              return;
-            }
-          });
-          if (found) return;
-        });
-        return oldData;
-      });
+      const updateQuery = updateQueryWrapper(tweet);
+      if (queryClient.getQueryState("tweets")) {
+        queryClient.setQueryData("tweets", updateQuery);
+      }
+      if (queryClient.getQueryState(["profileTweets", tweet.user.username])) {
+        queryClient.setQueryData(
+          ["profileTweets", tweet.user.username],
+          updateQuery
+        );
+      }
+      if (router.pathname === "/[username]/status/[tweetId]") {
+        router.replace(window.location.href);
+      }
     });
-    // likeTweet({ variables: { tweetId: tweet.pk } }).then((res) => {
-    //   if (res.data?.likeTweet?.success) {
-    //     apolloClient.refetchQueries({ include: [GetTweetsDocument] });
-    //   }
-    // });
   };
 
   const handleDelete = () => {
@@ -75,8 +90,8 @@ const Tweet: React.FC<{
         titleLeft
       >
         <p className="text-sm text-gray-500 mt-2 mb-4">
-          This can’t be undone and it will be removed from your profile, the
-          timeline of any accounts that follow you, and from Twitter search
+          This can&apos;t be undone and it will be removed from your profile,
+          the timeline of any accounts that follow you, and from Twitter search
           results.
         </p>
         <button
@@ -135,7 +150,7 @@ const Tweet: React.FC<{
           </div>
         </div>
 
-        <Link href={`/tweets/${tweet.id}`} passHref>
+        <Link href={`/${sender.username}/status/${tweet.id}`} passHref>
           <p className="break-words sm:max-w-full">{tweet.text}</p>
         </Link>
         {tweet.imageUrls.length > 0 && (
@@ -152,7 +167,7 @@ const Tweet: React.FC<{
         )}
 
         <div className="flex justify-between mt-2 text-trueGray-500">
-          <Link href={`/tweets/${tweet.id}`}>
+          <Link href={`/${tweet.user.username}/status/${tweet.id}`}>
             <a className="flex items-center hover:text-blue-500 group">
               <div className="rounded-full h-8 w-8 group-hover:bg-blue-100 dark:group-hover:bg-blue-500 dark:group-hover:bg-opacity-20 dark:group-hover:bg-transparent flex justify-center items-center cursor-pointer">
                 <svg

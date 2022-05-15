@@ -7,10 +7,15 @@ const handler = createHandler();
 
 handler.post(authOnly, async (req, res) => {
   const userId = getUserId(req, res)!;
+  let replyTo = req.body.replyTo as string;
+  if (typeof replyTo !== "string") {
+    replyTo = "";
+  }
   const tweet = await db.tweet.create({
     data: {
       text: req.body.text,
       userId,
+      commentToId: replyTo || undefined,
     },
     include: {
       user: { select: SIMPLE_USER_QUERY },

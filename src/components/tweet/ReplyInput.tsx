@@ -1,106 +1,71 @@
-/* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useRef, useState } from "react";
-import { InfiniteData } from "react-query";
-import { ITweet } from "~/type";
+import Link from "next/link";
+import React, { useRef, useState } from "react";
+import { ISimpleUser } from "~/type";
 import { postTweet } from "~/utils/api/tweet";
 import queryClient from "~/utils/queryClient";
 import { useUser } from "../AuthContext";
 import ProfilePic from "../profile/ProfilePic";
 
-function updateQueryWrapper(data: any) {
-  return (
-    oldData:
-      | InfiniteData<{
-          tweets: ITweet[];
-          count: number;
-        }>
-      | undefined
-  ) => {
-    if (!oldData) {
-      return {
-        pages: [{ tweets: [data], count: 1 }],
-        pageParams: [undefined],
-      };
-    }
-    oldData.pages[0].tweets.unshift(data);
-    oldData.pages[oldData.pages.length - 1].count++;
-    return oldData;
-  };
-}
-
-const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
+const ReplyInput: React.FC<{ tweetUser: ISimpleUser; tweetId: string }> = ({
+  tweetUser,
+  tweetId,
+}) => {
   const user = useUser();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [tweetInput, setTweetInput] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const imageInput = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    // autosize(textareaRef.current!);
-  }, []);
-
   const handleTweetSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
-
     if (tweetInput.length > 0 && user) {
-      resetPage();
-      postTweet(tweetInput).then((data) => {
-        const updateQuery = updateQueryWrapper(data);
+      postTweet(tweetInput, tweetId).then((data) => {
+        queryClient.setQueryData(["replies", tweetId], (oldData: any) => {
+          if (!oldData) {
+            return {
+              pages: [{ tweets: [data], count: 1 }],
+              pageParams: [undefined],
+            };
+          }
+          oldData.pages[0].tweets.unshift(data);
+          oldData.pages[oldData.pages.length - 1].count++;
+          return oldData;
+        });
         setTweetInput("");
-        queryClient.setQueryData<
-          InfiniteData<{
-            tweets: ITweet[];
-            count: number;
-          }>
-        >("tweets", updateQuery);
-        if (queryClient.getQueryState(["profileTweets", user.username]))
-          queryClient.setQueryData(
-            ["profileTweets", user.username],
-            updateQuery
-          );
       });
     }
   };
   return (
-    <div className="bg-white dark:bg-black flex px-4 py-2 main-border">
-      <div className="mr-2 flex-shrink-0">
-        <ProfilePic src={user?.photoUrl} username={user?.username}></ProfilePic>
+    <div className="bg-white dark:bg-black flex px-4 mx-1 py-2 mb-4">
+      <div className="mr-2 flex-shrink-0 flex items-center">
+        <ProfilePic
+          src={user?.photoUrl || undefined}
+          username={user?.username}
+        ></ProfilePic>
       </div>
       <div className="flex flex-grow flex-col">
+        <p className="text-gray-400 text-sm">
+          Replying to{" "}
+          <Link href={`/user/${tweetUser.username}`}>
+            <a className="text-blue-500">@{tweetUser.username}</a>
+          </Link>
+        </p>
         <form onSubmit={handleTweetSubmit}>
           <div className="py-2" onSubmit={handleTweetSubmit}>
             <textarea
               ref={textareaRef}
               className="outline-none text-xl resize-none w-full dark:bg-black dark:text-white"
-              placeholder="What's happening?"
+              placeholder="Tweet your reply"
               value={tweetInput}
               onChange={(e) => setTweetInput(e.target.value)}
             ></textarea>
             {image && (
-              <>
-                <img
-                  src={URL.createObjectURL(image)}
-                  alt={"image"}
-                  className="h-40 object-contain"
-                ></img>
-                {/* {<ImageCrop src={image} />} */}
-              </>
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={URL.createObjectURL(image)}
+                alt={image.name}
+                className="h-40 object-contain"
+              ></img>
             )}
-          </div>
-          <div>
-            <div className="text-blue-500 hover:bg-blue-100 dark:hover:bg-neutral-800 inline pt-1 pb-2 px-4 rounded-full cursor-pointer select-none">
-              <svg
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-                className="h-4 w-4 inline mr-2"
-                fill="currentColor"
-              >
-                <g>
-                  <path d="M12 1.5C6.2 1.5 1.5 6.2 1.5 12S6.2 22.5 12 22.5 22.5 17.8 22.5 12 17.8 1.5 12 1.5zM9.047 5.9c-.878.484-1.22.574-1.486.858-.263.284-.663 1.597-.84 1.712-.177.115-1.462.154-1.462.154s2.148 1.674 2.853 1.832c.706.158 2.43-.21 2.77-.142.342.07 2.116 1.67 2.324 2.074.208.404.166 1.748-.038 1.944-.204.196-1.183 1.09-1.393 1.39-.21.3-1.894 4.078-2.094 4.08-.2 0-.62-.564-.73-.848-.11-.284-.427-4.012-.59-4.263-.163-.25-1.126-.82-1.276-1.026-.15-.207-.552-1.387-.527-1.617.024-.23.492-1.007.374-1.214-.117-.207-2.207-1.033-2.61-1.18-.403-.145-.983-.332-.983-.332 1.13-3.652 4.515-6.318 8.52-6.38 0 0 .125-.018.186.14.11.286.256 1.078.092 1.345-.143.23-2.21.99-3.088 1.474zm11.144 8.24c-.21-.383-1.222-2.35-1.593-2.684-.23-.208-2.2-.912-2.55-1.09-.352-.177-1.258-.997-1.267-1.213-.01-.216 1.115-1.204 1.15-1.524.056-.49-1.882-1.835-1.897-2.054-.015-.22.147-.66.31-.81.403-.36 3.19.04 3.556.36 2 1.757 3.168 4.126 3.168 6.873 0 .776-.18 1.912-.282 2.18-.08.21-.443.232-.595-.04z"></path>
-                </g>
-              </svg>
-              <span className="font-bold text-sm">Everyone can reply</span>
-            </div>
           </div>
           <hr className="my-4 dark:border-gray-600" />
           <div className="flex">
@@ -110,20 +75,20 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
               accept="image/*"
               ref={imageInput}
               onChange={(e) => {
-                e.preventDefault();
-                let files;
-                if (e.target) {
-                  files = e.target.files;
-                }
-                if (files) {
-                  setImage(files[0]);
+                if (e.target.files) {
+                  const image = e.target.files[0];
+                  if (image.size <= 5242880) {
+                    setImage(image);
+                  } else {
+                    alert("Maximum size is 5 MB");
+                  }
                 }
               }}
             />
             <button
               type="button"
               onClick={() => imageInput.current?.click()}
-              className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-neutral-800 flex justify-center items-center cursor-pointer"
+              className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-trueGray-800 flex justify-center items-center cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +105,7 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
                 />
               </svg>
             </button>
-            <div className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-neutral-800 flex justify-center items-center cursor-pointer">
+            <div className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-trueGray-800 flex justify-center items-center cursor-pointer">
               <svg
                 viewBox="0 0 24 24"
                 aria-hidden="true"
@@ -153,7 +118,7 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
                 </g>
               </svg>
             </div>
-            <div className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-neutral-800 flex justify-center items-center cursor-pointer">
+            <div className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-trueGray-800 flex justify-center items-center cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -171,7 +136,7 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
             </div>
             <div className="flex-grow flex justify-end items-center">
               {tweetInput !== "" && (
-                <div className="text-blue-500 rounded-full h-8 w-8 hover:bg-blue-100 dark:hover:bg-neutral-800 flex justify-center items-center cursor-pointer mr-2 border border-blue-500">
+                <div className="text-blue-500 rounded-full h-8 w-8 hover:bg-blue-100 dark:hover:bg-trueGray-800 flex justify-center items-center cursor-pointer mr-2 border border-blue-500">
                   <svg
                     viewBox="0 0 24 24"
                     aria-hidden="true"
@@ -187,13 +152,13 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
               <button
                 type="submit"
                 className={`rounded-full px-4 py-2 text-white font-bold ${
-                  tweetInput || image
+                  tweetInput
                     ? "bg-blue-500 dark:bg-blue-500"
                     : "bg-blue-300 dark:bg-blue-500 dark:bg-opacity-60 dark:text-gray-400"
                 }`}
-                disabled={tweetInput === "" && image === null}
+                disabled={tweetInput === ""}
               >
-                Tweet
+                Reply
               </button>
             </div>
           </div>
@@ -203,4 +168,4 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
   );
 };
 
-export default TweetInput;
+export default ReplyInput;

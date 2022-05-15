@@ -16,6 +16,7 @@ const WhoToFollows = () => {
       refetchOnMount: false,
     }
   );
+  if (!users || users.length === 0) return null;
 
   const followCallback = (userId: string) => {
     if (!users) return;
