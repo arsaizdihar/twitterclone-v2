@@ -1,7 +1,5 @@
 import React from "react";
-import { useQuery } from "react-query";
-import { ITweet } from "~/type";
-import { request } from "~/utils/api";
+import useTweets from "~/hooks/useTweets";
 import { useUser } from "./AuthContext";
 import { useNavigationOpen } from "./NavigationContext";
 import ProfilePic from "./profile/ProfilePic";
@@ -11,19 +9,9 @@ import TweetInput from "./tweet/TweetInput";
 const Main: React.FC<{}> = () => {
   const { setIsOpen } = useNavigationOpen();
   const user = useUser();
-  const { data: tweets } = useQuery<ITweet[]>(
-    "tweets",
-    () => request({ url: "/api/tweets", method: "GET" }),
-    {
-      refetchOnMount: false,
-    }
-  );
-  // useEffect(() => {
-  //   const tweetsData = data?.tweets?.edges;
-  //   if (!fetching && tweetsData) {
-  //     setTweets(tweetsData.map((edge) => edge?.node) as any);
-  //   }
-  // }, [data, fetching]);
+  const { data, isFetchingNextPage, fetchNextPage } = useTweets({
+    type: "timeline",
+  });
   return (
     <div className="dark:bg-black max-w-[600px] flex-grow min-h-screen">
       <div className="bg-white dark:bg-black px-4 py-2 flex items-center main-border">
@@ -48,26 +36,10 @@ const Main: React.FC<{}> = () => {
       </div>
       {user !== null && <TweetInput resetPage={() => null} />}
       <div>
-        {tweets?.map((tweet) => (
-          <Tweet key={tweet.id} tweet={tweet} />
-        ))}
+        {data?.pages.map((page, idx) =>
+          page.tweets.map((tweet) => <Tweet key={tweet.id} tweet={tweet} />)
+        )}
       </div>
-      {/* <InfiniteScroll
-        dataLength={page} //This is important field to render the next data
-        next={() => setPage(page + 1)}
-        hasMore={hasNext}
-        loader={<h4 className="text-center my-2">Loading...</h4>}
-      >
-        {Array(page)
-          .fill(0)
-          .map((val, index) => (
-            <TweetPages
-              page={index + 1}
-              key={index}
-              hasNextCallback={hasNextCallback}
-            />
-          ))}
-      </InfiniteScroll> */}
     </div>
   );
 };

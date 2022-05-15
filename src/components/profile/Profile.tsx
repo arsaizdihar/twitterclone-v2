@@ -2,8 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import useTweets from "~/hooks/useTweets";
 import { IUserProfile } from "~/type";
 import { Private, Verified } from "../icons";
+import Tweet from "../tweet/Tweet";
 
 interface Props {
   isCurrentUser: boolean;
@@ -118,26 +120,26 @@ const Profile: React.FC<Props> = ({ isCurrentUser, user, username }) => {
         </div>
       </div>
       <div>
-        {/* <InfiniteScroll
-          dataLength={page} //This is important field to render the next data
-          next={() => setPage(page + 1)}
-          hasMore={hasNext}
-          loader={<h4 className="text-center my-2">Loading...</h4>}
-        >
-          {Array(page)
-            .fill(0)
-            .map((val, index) => (
-              <TweetPages
-                page={index + 1}
-                key={index}
-                hasNextCallback={hasNextCallback}
-                username={username}
-              />
-            ))}
-        </InfiniteScroll> */}
+        <ProfileTweets />
       </div>
     </div>
   );
 };
+
+function ProfileTweets() {
+  const router = useRouter();
+  const username = router.query.username as string;
+  const { data, isFetchingNextPage, fetchNextPage } = useTweets({
+    type: "profile",
+    username,
+  });
+  return (
+    <>
+      {data?.pages.map((page) =>
+        page.tweets.map((tweet) => <Tweet key={tweet.id} tweet={tweet} />)
+      )}
+    </>
+  );
+}
 
 export default Profile;

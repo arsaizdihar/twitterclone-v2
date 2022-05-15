@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from "react";
+import { InfiniteData } from "react-query";
+import { ITweet } from "~/type";
 import { postTweet } from "~/utils/api/tweet";
 import queryClient from "~/utils/queryClient";
 import { useUser } from "../AuthContext";
@@ -21,13 +23,22 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
     if (tweetInput.length > 0 && user) {
       resetPage();
       postTweet(tweetInput).then((data) => {
-        console.log(data);
         setTweetInput("");
-        queryClient.setQueryData<any[]>("tweets", (oldData) => {
+        queryClient.setQueryData<
+          InfiniteData<{
+            tweets: ITweet[];
+            count: number;
+          }>
+        >("tweets", (oldData) => {
           if (!oldData) {
-            return [data];
+            return {
+              pages: [{ tweets: [data], count: 1 }],
+              pageParams: [undefined],
+            };
           }
-          return [data, ...oldData];
+          oldData.pages[0].tweets.unshift(data);
+          oldData.pages[oldData.pages.length - 1].count++;
+          return oldData;
         });
         // const tweet = { ...data?.tweet, user } as tweetObject;
         // if (data?.success) {

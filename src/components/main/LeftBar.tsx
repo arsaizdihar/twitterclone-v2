@@ -225,7 +225,7 @@ const LeftBar: React.FC<{}> = () => {
           </div>
           <IconDiv
             icon={faUser}
-            current={router.asPath === `/user/${user.username}`}
+            current={router.query.username !== undefined}
             name="Profile"
             href={`/${user.username}`}
           />
