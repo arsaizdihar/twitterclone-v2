@@ -20,32 +20,42 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
 
   const handleTweetSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
+    function updateQueryWrapper(data: any) {
+      return (
+        oldData:
+          | InfiniteData<{
+              tweets: ITweet[];
+              count: number;
+            }>
+          | undefined
+      ) => {
+        if (!oldData) {
+          return {
+            pages: [{ tweets: [data], count: 1 }],
+            pageParams: [undefined],
+          };
+        }
+        oldData.pages[0].tweets.unshift(data);
+        oldData.pages[oldData.pages.length - 1].count++;
+        return oldData;
+      };
+    }
     if (tweetInput.length > 0 && user) {
       resetPage();
       postTweet(tweetInput).then((data) => {
+        const updateQuery = updateQueryWrapper(data);
         setTweetInput("");
         queryClient.setQueryData<
           InfiniteData<{
             tweets: ITweet[];
             count: number;
           }>
-        >("tweets", (oldData) => {
-          if (!oldData) {
-            return {
-              pages: [{ tweets: [data], count: 1 }],
-              pageParams: [undefined],
-            };
-          }
-          oldData.pages[0].tweets.unshift(data);
-          oldData.pages[oldData.pages.length - 1].count++;
-          return oldData;
-        });
-        // const tweet = { ...data?.tweet, user } as tweetObject;
-        // if (data?.success) {
-        //   setTweetInput("");
-        //   apolloClient.refetchQueries({ include: [GetTweetsDocument] });
-        //   setImage(null);
-        // }
+        >("tweets", updateQuery);
+        if (queryClient.getQueryState(["profileTweets", user.username]))
+          queryClient.setQueryData(
+            ["profileTweets", user.username],
+            updateQuery
+          );
       });
     }
   };
