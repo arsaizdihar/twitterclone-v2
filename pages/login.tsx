@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import InputForm from "~/components/forms/InputForm";
 import Head from "~/components/Head";
 import Modal from "~/components/Modal";
-import { login, register } from "~/utils/api";
+import { login, register } from "~/utils/api/auth";
 
 interface LoginErrors {
   username?: string;

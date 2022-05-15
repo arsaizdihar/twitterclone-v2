@@ -11,20 +11,24 @@ datasource db {
 }
 
 model User {
-  id          String         @id @default(cuid())
-  displayName String
-  email       String         @unique
-  username    String         @unique
-  password    Password?
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  bio         String         @default("") @db.Text
-  private     Boolean        @default(false)
-  verified    Boolean        @default(false)
-  photoUrl    String?
-  tweets      Tweet[]
-  likes       TweetLike[]
-  retweets    TweetRetweet[]
+  id                String         @id @default(cuid())
+  displayName       String
+  email             String         @unique
+  username          String         @unique
+  password          Password?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  bio               String         @default("") @db.Text
+  private           Boolean        @default(false)
+  verified          Boolean        @default(false)
+  photoUrl          String?
+  tweets            Tweet[]
+  likes             TweetLike[]
+  retweets          TweetRetweet[]
+  followers         User[]         @relation(name: "UserFollow", references: [id])
+  following         User[]         @relation(name: "UserFollow", references: [id])
+  followingRequests User[]         @relation(name: "UserFollowRequest", references: [id])
+  followerRequests  User[]         @relation(name: "UserFollowRequest", references: [id])
 }
 
 model Password {

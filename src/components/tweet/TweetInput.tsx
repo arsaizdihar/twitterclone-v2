@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from "react";
+import { postTweet } from "~/utils/api/tweet";
 import { useUser } from "../AuthContext";
 import ProfilePic from "../profile/ProfilePic";
 
@@ -16,20 +17,19 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
 
   const handleTweetSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
-    // if (tweetInput.length > 0 && user) {
-    //   resetPage();
-    //   postTweet({ variables: { text: tweetInput, file: image } }).then(
-    //     (res) => {
-    //       const data = res?.data?.postTweet;
-    //       const tweet = { ...data?.tweet, user } as tweetObject;
-    //       if (data?.success) {
-    //         setTweetInput("");
-    //         apolloClient.refetchQueries({ include: [GetTweetsDocument] });
-    //         setImage(null);
-    //       }
-    //     }
-    //   );
-    // }
+    if (tweetInput.length > 0 && user) {
+      resetPage();
+      postTweet(tweetInput).then((data) => {
+        console.log(data);
+        setTweetInput("");
+        // const tweet = { ...data?.tweet, user } as tweetObject;
+        // if (data?.success) {
+        //   setTweetInput("");
+        //   apolloClient.refetchQueries({ include: [GetTweetsDocument] });
+        //   setImage(null);
+        // }
+      });
+    }
   };
   return (
     <div className="bg-white dark:bg-black flex px-4 py-2 main-border">
@@ -58,7 +58,7 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
             )}
           </div>
           <div>
-            <div className="text-blue-500 hover:bg-blue-100 dark:hover:bg-trueGray-800 inline pt-1 pb-2 px-4 rounded-full cursor-pointer select-none">
+            <div className="text-blue-500 hover:bg-blue-100 dark:hover:bg-neutral-800 inline pt-1 pb-2 px-4 rounded-full cursor-pointer select-none">
               <svg
                 viewBox="0 0 24 24"
                 aria-hidden="true"
@@ -93,7 +93,7 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
             <button
               type="button"
               onClick={() => imageInput.current?.click()}
-              className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-trueGray-800 flex justify-center items-center cursor-pointer"
+              className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-neutral-800 flex justify-center items-center cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -110,7 +110,7 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
                 />
               </svg>
             </button>
-            <div className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-trueGray-800 flex justify-center items-center cursor-pointer">
+            <div className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-neutral-800 flex justify-center items-center cursor-pointer">
               <svg
                 viewBox="0 0 24 24"
                 aria-hidden="true"
@@ -123,7 +123,7 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
                 </g>
               </svg>
             </div>
-            <div className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-trueGray-800 flex justify-center items-center cursor-pointer">
+            <div className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-neutral-800 flex justify-center items-center cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -141,7 +141,7 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
             </div>
             <div className="flex-grow flex justify-end items-center">
               {tweetInput !== "" && (
-                <div className="text-blue-500 rounded-full h-8 w-8 hover:bg-blue-100 dark:hover:bg-trueGray-800 flex justify-center items-center cursor-pointer mr-2 border border-blue-500">
+                <div className="text-blue-500 rounded-full h-8 w-8 hover:bg-blue-100 dark:hover:bg-neutral-800 flex justify-center items-center cursor-pointer mr-2 border border-blue-500">
                   <svg
                     viewBox="0 0 24 24"
                     aria-hidden="true"

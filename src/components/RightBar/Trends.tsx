@@ -6,7 +6,7 @@ const Trends = () => {
     <div className="bg-gray-100 dark:bg-gray_dark dark:text-gray-200 my-2 pt-2 rounded-xl">
       <div className="flex items-center justify-between px-4 mb-2">
         <h3 className="font-extrabold text-xl">Trends for you</h3>
-        <div className="text-blue-500 dark:text-white hover:bg-blue-100 dark:hover:bg-trueGray-800 h-10 w-10 flex items-center justify-center rounded-full cursor-pointer">
+        <div className="text-blue-500 dark:text-white hover:bg-blue-100 dark:hover:bg-slate-800 h-10 w-10 flex items-center justify-center rounded-full cursor-pointer">
           <svg
             viewBox="0 0 24 24"
             aria-hidden="true"
@@ -28,7 +28,7 @@ const Trends = () => {
       />
       <Trend category="Movies & TV · Trending" title="Elsa" tweets="109K" />
       <Trend category="Movies & TV · Trending" title="Nino" tweets="71.2K" />
-      <div className="hover:bg-gray-200 dark:hover:bg-trueGray-800 cursor-pointer text-blue-500 rounded-b-xl px-4 py-3">
+      <div className="hover:bg-gray-200 dark:hover:bg-neutral-800 cursor-pointer text-blue-500 rounded-b-xl px-4 py-3">
         Show more
       </div>
     </div>
@@ -41,13 +41,13 @@ const Trend: React.FC<{ title: string; tweets: string; category: string }> = ({
   category,
 }) => {
   return (
-    <div className="flex justify-between hover:bg-gray-200 dark:hover:bg-trueGray-800 px-4 cursor-pointer py-2">
+    <div className="flex justify-between hover:bg-gray-200 dark:hover:bg-neutral-800 px-4 cursor-pointer py-2">
       <div className="leading-none">
-        <span className="text-xs text-gray-600 dark:text-trueGray-500">
+        <span className="text-xs text-gray-600 dark:text-neutral-500">
           {category}
         </span>
         <h4 className="font-bold text-base">{title}</h4>
-        <span className="text-xs text-gray-600 dark:text-trueGray-500">
+        <span className="text-xs text-gray-600 dark:text-neutral-500 text-">
           {tweets} Tweets
         </span>
       </div>

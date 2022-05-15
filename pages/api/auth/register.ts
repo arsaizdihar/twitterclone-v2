@@ -1,10 +1,9 @@
 import bcrypt from "bcryptjs";
-import { NextApiRequest, NextApiResponse } from "next";
-import nextConnect from "next-connect";
+import createHandler from "~/server/createHandler";
 import db from "~/server/prisma";
 import signJWT from "~/server/signJWT";
 
-const handler = nextConnect<NextApiRequest, NextApiResponse>();
+const handler = createHandler();
 
 handler.post(async (req, res) => {
   const user = await db.user.create({

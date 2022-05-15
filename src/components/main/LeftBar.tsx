@@ -45,7 +45,7 @@ const LeftBar: React.FC<{
           all the Twitter accounts on this browser.
         </p>
         <h4 className="text-sm font-bold text-gray-500">Background</h4>
-        <div className="p-2 bg-gray-100 dark:bg-trueGray-800 rounded-xl mt-1 grid grid-cols-2 text-center gap-2 font-bold">
+        <div className="p-2 bg-gray-100 dark:bg-neutral-800 rounded-xl mt-1 grid grid-cols-2 text-center gap-2 font-bold">
           <button
             className={`flex p-4 bg-white rounded items-center border-2 ${
               theme === "light" ? "border-blue-500" : "border-transparent"
@@ -90,7 +90,7 @@ const LeftBar: React.FC<{
           >
             <div
               className={`rounded-full w-6 h-6 mx-2 ${
-                theme == "dark" ? "bg-blue-500" : "border border-trueGray-700"
+                theme == "dark" ? "bg-blue-500" : "border border-neutral-700"
               }`}
             >
               {theme == "dark" && (
@@ -253,7 +253,11 @@ const LeftBar: React.FC<{
               </h3>
             </div>
           </button>
-          <IconDiv icon={faSignOutAlt} name="Logout" onClick={() => {}} />
+          <IconDiv
+            icon={faSignOutAlt}
+            name="Logout"
+            onClick={() => router.push("/logout")}
+          />
           <div></div>
           <div className="rounded-full bg-blue-500 hover:bg-opacity-80 h-10 w-10 xl:h-12 xl:w-full text-white flex items-center justify-center flex-shrink-0 cursor-pointer">
             <span className="font-bold text-lg hidden xl:inline-block">
@@ -275,7 +279,7 @@ const LeftBar: React.FC<{
       {user !== null && (
         <div className="flex-grow sm:flex items-end pb-2 hidden">
           <Link href={`/user/${user.username}`}>
-            <a className="flex items-center rounded-full cursor-pointer xl:hover:bg-blue-100 xl:dark:hover:bg-trueGray-800 pt-1 pr-2 xl:px-2 xl:flex-grow">
+            <a className="flex items-center rounded-full cursor-pointer xl:hover:bg-blue-100 xl:dark:hover:bg-neutral-800 pt-1 pr-2 xl:px-2 xl:flex-grow">
               <ProfilePic
                 src={user.photoUrl}
                 username={user.username}

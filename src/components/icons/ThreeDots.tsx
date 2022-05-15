@@ -1,7 +1,7 @@
 const ThreeDots = () => {
   return (
     <div className="flex flex-grow justify-end">
-      <div className="hover:text-blue-500 text-trueGray-500 rounded-full h-8 w-8 hover:bg-blue-100 dark:hover:bg-trueGray-800 flex justify-center items-center cursor-pointer">
+      <div className="hover:text-blue-500 text-neutral-500 rounded-full h-8 w-8 hover:bg-blue-100 dark:hover:bg-neutral-800 flex justify-center items-center cursor-pointer">
         <svg
           viewBox="0 0 24 24"
           aria-hidden="true"

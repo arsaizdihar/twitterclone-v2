@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export async function request({
+export default async function request({
   url,
   method,
   body,
@@ -17,12 +17,4 @@ export async function request({
     withCredentials: true,
     data: body,
   }).then((res) => res.data);
-}
-
-export async function register(data: any) {
-  return await request({ url: "/api/register", method: "POST", body: data });
-}
-
-export async function login(data: any) {
-  return await request({ url: "/api/login", method: "POST", body: data });
 }

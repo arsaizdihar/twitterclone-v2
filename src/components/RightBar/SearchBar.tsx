@@ -7,7 +7,7 @@ const SearchBar = () => {
       className={`flex items-center rounded-full py-2 px-4 group border ${
         isFocus
           ? "bg-white dark:bg-black text-blue-500 border-blue-500"
-          : "bg-gray-100 dark:bg-gray_dark text-trueGray-500 border-transparent"
+          : "bg-gray-100 dark:bg-gray_dark text-neutral-500 border-transparent"
       }`}
     >
       <div className="inline-flex items-center justify-center">

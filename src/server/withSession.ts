@@ -4,7 +4,7 @@ import {
   GetServerSidePropsResult,
 } from "next";
 import { ISimpleUser } from "~/type";
-import getUser from "./getUser";
+import { getUser } from "./user";
 
 type Handler = (
   ctx: GetServerSidePropsContext,
