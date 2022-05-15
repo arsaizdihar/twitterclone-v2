@@ -77,6 +77,7 @@ handler.get(async (req, res) => {
         skip: cursor ? 1 : 0,
         where: query,
         include: {
+          media: { select: { id: true, url: true } },
           user: { select: SIMPLE_USER_QUERY },
           likes: {
             where: {

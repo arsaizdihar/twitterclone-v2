@@ -19,6 +19,7 @@ export type ITweet = Tweet & {
     likes: number;
     retweets: number;
   };
+  media: Array<{ id: string; url: string }>;
 };
 
 export type IUserProfile = User & {

@@ -32,7 +32,7 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
   const user = useUser();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [tweetInput, setTweetInput] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+  const [images, setImages] = useState<File[]>([]);
   const imageInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -44,9 +44,14 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
 
     if (tweetInput.length > 0 && user) {
       resetPage();
-      postTweet(tweetInput).then((data) => {
+      const formData = new FormData();
+
+      formData.append("text", tweetInput);
+      images.forEach((image) => formData.append("files", image));
+      postTweet(formData).then((data) => {
         const updateQuery = updateQueryWrapper(data);
         setTweetInput("");
+        setImages([]);
         queryClient.setQueryData<
           InfiniteData<{
             tweets: ITweet[];
@@ -76,16 +81,16 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
               value={tweetInput}
               onChange={(e) => setTweetInput(e.target.value)}
             ></textarea>
-            {image && (
-              <>
+            <div className="flex">
+              {images.map((image, idx) => (
                 <img
+                  key={idx}
                   src={URL.createObjectURL(image)}
                   alt={"image"}
                   className="h-40 object-contain"
                 ></img>
-                {/* {<ImageCrop src={image} />} */}
-              </>
-            )}
+              ))}
+            </div>
           </div>
           <div>
             <div className="text-blue-500 hover:bg-blue-100 dark:hover:bg-neutral-800 inline pt-1 pb-2 px-4 rounded-full cursor-pointer select-none">
@@ -109,14 +114,14 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
               className="hidden"
               accept="image/*"
               ref={imageInput}
+              multiple
               onChange={(e) => {
                 e.preventDefault();
-                let files;
-                if (e.target) {
-                  files = e.target.files;
-                }
+                let files = e.target.files;
                 if (files) {
-                  setImage(files[0]);
+                  setImages(Array.from(files));
+                } else {
+                  setImages([]);
                 }
               }}
             />
@@ -187,11 +192,11 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
               <button
                 type="submit"
                 className={`rounded-full px-4 py-2 text-white font-bold ${
-                  tweetInput || image
+                  tweetInput || images.length > 0
                     ? "bg-blue-500 dark:bg-blue-500"
                     : "bg-blue-300 dark:bg-blue-500 dark:bg-opacity-60 dark:text-gray-400"
                 }`}
-                disabled={tweetInput === "" && image === null}
+                disabled={tweetInput === "" && images.length === 0}
               >
                 Tweet
               </button>

@@ -1,10 +1,10 @@
 import request from "./request";
 
-export function postTweet(text: string, replyTo?: string) {
+export function postTweet(data: FormData) {
   return request({
     url: "/api/tweet",
     method: "POST",
-    body: { text, replyTo },
+    body: data,
   });
 }
 

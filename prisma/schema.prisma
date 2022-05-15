@@ -29,6 +29,7 @@ model User {
   following         User[]         @relation(name: "UserFollow", references: [id])
   followingRequests User[]         @relation(name: "UserFollowRequest", references: [id])
   followerRequests  User[]         @relation(name: "UserFollowRequest", references: [id])
+  media             Media[]
 }
 
 model Password {
@@ -46,7 +47,7 @@ model Tweet {
   commentToId String?
   commentTo   Tweet?         @relation("Comment", fields: [commentToId], references: [id], onDelete: Cascade)
   comments    Tweet[]        @relation("Comment")
-  imageUrls   String[]
+  media       Media[]
   likes       TweetLike[]
   retweets    TweetRetweet[]
 }
@@ -69,4 +70,14 @@ model TweetRetweet {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([tweetId, userId])
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  userId    String
+  tweetId   String?
+  createdAt DateTime @default(now())
+  url       String
+  tweet     Tweet?   @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

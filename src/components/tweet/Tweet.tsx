@@ -153,18 +153,20 @@ const Tweet: React.FC<{
         <Link href={`/${sender.username}/status/${tweet.id}`} passHref>
           <p className="break-words sm:max-w-full">{tweet.text}</p>
         </Link>
-        {tweet.imageUrls.length > 0 && (
-          <Link href={tweet.imageUrls[0]}>
-            <a target="_blank" className="h-40 text-left">
-              <img
-                src={tweet.imageUrls[0]}
-                alt={tweet.text}
-                loading="lazy"
-                className="object-contain max-h-full"
-              />
-            </a>
-          </Link>
-        )}
+        <div className="flex flex-wrap">
+          {tweet.media.map((file) => (
+            <Link href={file.url} key={file.id}>
+              <a target="_blank" className="h-40 text-left">
+                <img
+                  src={file.url}
+                  alt={file.id}
+                  loading="lazy"
+                  className="object-contain max-h-full"
+                />
+              </a>
+            </Link>
+          ))}
+        </div>
 
         <div className="flex justify-between mt-2 text-trueGray-500">
           <Link href={`/${tweet.user.username}/status/${tweet.id}`}>
