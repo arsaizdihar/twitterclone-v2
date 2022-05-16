@@ -1,9 +1,9 @@
-import AWS from "aws-sdk";
 import formidable from "formidable";
 import fs from "fs";
 import createHandler from "~/server/createHandler";
 import authOnly from "~/server/middlewares/authOnly";
 import db from "~/server/prisma";
+import { s3 } from "~/server/s3";
 import { getUserId, SIMPLE_USER_QUERY } from "~/server/user";
 
 export const config = {
@@ -11,12 +11,6 @@ export const config = {
     bodyParser: false,
   },
 };
-
-const s3 = new AWS.S3({
-  endpoint: "is3.cloudhost.id",
-  accessKeyId: process.env.S3_ACCESS_KEY,
-  secretAccessKey: process.env.S3_SECRET_KEY,
-});
 
 const handler = createHandler();
 

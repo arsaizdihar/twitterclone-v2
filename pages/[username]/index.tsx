@@ -43,7 +43,7 @@ export const getServerSideProps: GetServerSideProps = withSession({
       if (userId === user.id || (userId && user.followers.length > 0)) {
         return {
           props: {
-            data: user,
+            data: JSON.parse(JSON.stringify(user)),
           },
         };
       }

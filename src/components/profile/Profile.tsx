@@ -15,13 +15,7 @@ interface Props {
 
 const Profile: React.FC<Props> = ({ isCurrentUser, user, username }) => {
   const router = useRouter();
-  const [page, setPage] = useState(1);
   const [hasNext, setHasNext] = useState(false);
-  const hasNextCallback = (num: number, next: boolean) => {
-    if (num == page) {
-      setHasNext(next);
-    }
-  };
   const followCallback = () => {
     // if (user.pk) {
     //   follow({ variables: { userId: user.pk } });

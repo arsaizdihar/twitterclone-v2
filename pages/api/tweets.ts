@@ -39,7 +39,7 @@ handler.get(async (req, res) => {
       if (!user) {
         return res.status(404).send({ error: "User not found" });
       }
-      if (user.private && !user.followers.length) {
+      if (user.id !== userId && user.private && !user.followers.length) {
         return res.status(404).send({ error: "User is private" });
       }
       query = {

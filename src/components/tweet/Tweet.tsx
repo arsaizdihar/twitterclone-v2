@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { InfiniteData } from "react-query";
 import { ITweet } from "~/type";
-import { likeTweet } from "~/utils/api/tweet";
+import { deleteTweet, likeTweet } from "~/utils/api/tweet";
 import { getTweetTimeString } from "~/utils/getTweetTimeString";
 import queryClient from "~/utils/queryClient";
 import { useUser } from "../AuthContext";
@@ -76,8 +76,11 @@ const Tweet: React.FC<{
   };
 
   const handleDelete = () => {
-    // deleteTweet({ variables: { id: tweet.pk } });
-    // setIsDelete(false);
+    deleteTweet(tweet.id).then(() => {
+      setIsDelete(false);
+      queryClient.invalidateQueries("tweets");
+      queryClient.invalidateQueries(["profileTweets", user?.username]);
+    });
   };
   const sender = tweet.user;
   return (
