@@ -81,7 +81,7 @@ const Tweet: React.FC<{
   };
   const sender = tweet.user;
   return (
-    <div className="bg-white dark:bg-black dark:text-gray-200 flex px-2 sm:px-4 py-4 hover:bg-gray-100 dark:hover:bg-trueGray-900 cursor-pointer main-border">
+    <div className="bg-white dark:bg-black dark:text-gray-200 flex px-2 sm:px-4 py-4 hover:bg-gray-100 dark:hover:bg-neutral-900 cursor-pointer main-border">
       <Modal
         title="Delete tweet?"
         onClose={() => setIsDelete(false)}
@@ -101,7 +101,7 @@ const Tweet: React.FC<{
           Delete
         </button>
         <button
-          className="block bg-white dark:bg-black border-2 dark:border-gray-700 w-full p-2 font-bold rounded-full my-2 hover:bg-gray-200 dark:hover:bg-trueGray-900 duration-200"
+          className="block bg-white dark:bg-black border-2 dark:border-gray-700 w-full p-2 font-bold rounded-full my-2 hover:bg-gray-200 dark:hover:bg-neutral-900 duration-200"
           onClick={() => setIsDelete(false)}
         >
           Cancel
@@ -120,7 +120,7 @@ const Tweet: React.FC<{
           </Link>
           {sender.private && <Private />}
           {sender.verified && <Verified />}
-          <span className="sm:pl-2 text-trueGray-500 block w-full sm:inline-block sm:w-auto">
+          <span className="sm:pl-2 text-neutral-500 block w-full sm:inline-block sm:w-auto">
             @{sender.username} · {getTweetTimeString(tweet.createdAt)}
           </span>
           <div className="absolute sm:static top-0 right-0 sm:flex flex-grow justify-end">
@@ -135,7 +135,7 @@ const Tweet: React.FC<{
                 >
                   <button
                     ref={modalRef}
-                    className="p-2 text-red-500 flex items-center hover:bg-gray-100 dark:hover:bg-trueGray-800"
+                    className="p-2 text-red-500 flex items-center hover:bg-gray-100 dark:hover:bg-neutral-800"
                     onClick={() => setIsDelete(true)}
                   >
                     <FontAwesomeIcon
@@ -168,7 +168,7 @@ const Tweet: React.FC<{
           ))}
         </div>
 
-        <div className="flex justify-between mt-2 text-trueGray-500">
+        <div className="flex justify-between mt-2 text-neutral-500">
           <Link href={`/${tweet.user.username}/status/${tweet.id}`}>
             <a className="flex items-center hover:text-blue-500 group">
               <div className="rounded-full h-8 w-8 group-hover:bg-blue-100 dark:group-hover:bg-blue-500 dark:group-hover:bg-opacity-20 dark:group-hover:bg-transparent flex justify-center items-center cursor-pointer">

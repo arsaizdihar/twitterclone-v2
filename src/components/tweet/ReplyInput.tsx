@@ -95,7 +95,7 @@ const ReplyInput: React.FC<{ tweetUser: ISimpleUser; tweetId: string }> = ({
             <button
               type="button"
               onClick={() => imageInput.current?.click()}
-              className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-trueGray-800 flex justify-center items-center cursor-pointer"
+              className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-neutral-800 flex justify-center items-center cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +112,7 @@ const ReplyInput: React.FC<{ tweetUser: ISimpleUser; tweetId: string }> = ({
                 />
               </svg>
             </button>
-            <div className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-trueGray-800 flex justify-center items-center cursor-pointer">
+            <div className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-neutral-800 flex justify-center items-center cursor-pointer">
               <svg
                 viewBox="0 0 24 24"
                 aria-hidden="true"
@@ -125,7 +125,7 @@ const ReplyInput: React.FC<{ tweetUser: ISimpleUser; tweetId: string }> = ({
                 </g>
               </svg>
             </div>
-            <div className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-trueGray-800 flex justify-center items-center cursor-pointer">
+            <div className="text-blue-500 rounded-full h-10 w-10 hover:bg-blue-100 dark:hover:bg-neutral-800 flex justify-center items-center cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -143,7 +143,7 @@ const ReplyInput: React.FC<{ tweetUser: ISimpleUser; tweetId: string }> = ({
             </div>
             <div className="flex-grow flex justify-end items-center">
               {tweetInput !== "" && (
-                <div className="text-blue-500 rounded-full h-8 w-8 hover:bg-blue-100 dark:hover:bg-trueGray-800 flex justify-center items-center cursor-pointer mr-2 border border-blue-500">
+                <div className="text-blue-500 rounded-full h-8 w-8 hover:bg-blue-100 dark:hover:bg-neutral-800 flex justify-center items-center cursor-pointer mr-2 border border-blue-500">
                   <svg
                     viewBox="0 0 24 24"
                     aria-hidden="true"
