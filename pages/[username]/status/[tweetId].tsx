@@ -23,6 +23,7 @@ export const getServerSideProps = withSession({
         },
       },
       include: {
+        media: { select: { id: true, url: true } },
         user: { select: SIMPLE_USER_QUERY },
         likes: {
           where: {
