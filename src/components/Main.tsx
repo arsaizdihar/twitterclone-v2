@@ -1,6 +1,7 @@
 import React from "react";
 import useTweets from "~/hooks/useTweets";
 import { useUser } from "./AuthContext";
+import Spinner from "./main/Spinner";
 import { useNavigationOpen } from "./NavigationContext";
 import ProfilePic from "./profile/ProfilePic";
 import Tweet from "./tweet/Tweet";
@@ -38,6 +39,11 @@ const Main: React.FC<{}> = () => {
       <div>
         {data?.pages.map((page, idx) =>
           page.tweets.map((tweet) => <Tweet key={tweet.id} tweet={tweet} />)
+        )}
+        {isFetchingNextPage && (
+          <div className="w-full flex justify-center my-2">
+            <Spinner />
+          </div>
         )}
       </div>
     </div>

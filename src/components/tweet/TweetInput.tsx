@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { InfiniteData } from "react-query";
 import { ITweet } from "~/type";
 import { postTweet } from "~/utils/api/tweet";
@@ -42,13 +43,13 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
   const handleTweetSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
 
-    if (tweetInput.length > 0 && user) {
+    if ((tweetInput.length > 0 || images.length > 0) && user) {
       resetPage();
       const formData = new FormData();
 
       formData.append("text", tweetInput);
       images.forEach((image) => formData.append("files", image));
-      postTweet(formData).then((data) => {
+      const promise = postTweet(formData).then((data) => {
         const updateQuery = updateQueryWrapper(data);
         setTweetInput("");
         setImages([]);
@@ -64,6 +65,13 @@ const TweetInput: React.FC<{ resetPage: () => void }> = ({ resetPage }) => {
             updateQuery
           );
       });
+
+      toast.promise(promise, {
+        loading: "Posting tweet...",
+        success: "Tweet posted!",
+        error: "Failed to post tweet!",
+      });
+      promise.catch((err) => console.log(err));
     }
   };
   return (

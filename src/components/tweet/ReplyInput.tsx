@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React, { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { ISimpleUser } from "~/type";
 import { postTweet } from "~/utils/api/tweet";
 import queryClient from "~/utils/queryClient";
@@ -22,7 +23,7 @@ const ReplyInput: React.FC<{ tweetUser: ISimpleUser; tweetId: string }> = ({
       formData.append("text", tweetInput);
       formData.append("replyTo", tweetId);
       images.forEach((image) => formData.append("files", image));
-      postTweet(formData).then((data) => {
+      const promise = postTweet(formData).then((data) => {
         queryClient.setQueryData(["replies", tweetId], (oldData: any) => {
           if (!oldData) {
             return {
@@ -37,6 +38,14 @@ const ReplyInput: React.FC<{ tweetUser: ISimpleUser; tweetId: string }> = ({
         setTweetInput("");
         setImages([]);
       });
+
+      toast.promise(promise, {
+        loading: "Posting tweet...",
+        success: "Tweet posted!",
+        error: "Failed to post tweet!",
+      });
+
+      promise.catch((err) => console.log(err));
     }
   };
   return (

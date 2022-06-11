@@ -1,5 +1,6 @@
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider, useTheme } from "next-themes";
 import type { AppProps } from "next/app";
+import { Toaster } from "react-hot-toast";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { AuthProvider } from "~/components/AuthContext";
@@ -20,11 +21,29 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Layout>
               <Component {...pageProps} />
             </Layout>
+            <ToastWithTheme />
             <ReactQueryDevtools />
           </AuthProvider>
         </PageDataProvider>
       </ThemeProvider>
     </QueryClientProvider>
+  );
+}
+
+function ToastWithTheme() {
+  const { resolvedTheme } = useTheme();
+  return (
+    <Toaster
+      toastOptions={{
+        style:
+          resolvedTheme === "dark"
+            ? {
+                background: "#333",
+                color: "#fff",
+              }
+            : {},
+      }}
+    />
   );
 }
 

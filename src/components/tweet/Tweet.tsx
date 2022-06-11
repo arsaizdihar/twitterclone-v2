@@ -5,6 +5,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { InfiniteData } from "react-query";
 import { ITweet } from "~/type";
 import { deleteTweet, likeTweet } from "~/utils/api/tweet";
@@ -76,11 +77,19 @@ const Tweet: React.FC<{
   };
 
   const handleDelete = () => {
-    deleteTweet(tweet.id).then(() => {
+    const promise = deleteTweet(tweet.id).then(() => {
       setIsDelete(false);
       queryClient.invalidateQueries("tweets");
       queryClient.invalidateQueries(["profileTweets", user?.username]);
     });
+
+    toast.promise(promise, {
+      loading: "Deleting tweet...",
+      success: "Tweet deleted!",
+      error: "Failed to delete tweet!",
+    });
+
+    promise.catch((err) => console.log(err));
   };
   const sender = tweet.user;
   return (
