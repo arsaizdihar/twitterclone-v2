@@ -61,24 +61,15 @@ function useTweets({
   useEffect(() => {
     function listener() {
       if (isFetchingNextPage) return;
-      const body = document.body,
-        html = document.documentElement;
-      const height = Math.max(
-        body.scrollHeight,
-        body.offsetHeight,
-        html.clientHeight,
-        html.scrollHeight,
-        html.offsetHeight
-      );
       if (
-        Math.round(window.scrollY + window.innerHeight) === Math.round(height)
+        Math.ceil(window.innerHeight + window.pageYOffset + 5) >=
+        document.body.offsetHeight
       ) {
         fetchNextPage();
       }
     }
     window.addEventListener("scroll", listener);
     return () => {
-      console.log("destroyed");
       window.removeEventListener("scroll", listener);
     };
   }, [fetchNextPage, isFetchingNextPage]);
