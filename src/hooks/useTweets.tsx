@@ -70,7 +70,9 @@ function useTweets({
         html.scrollHeight,
         html.offsetHeight
       );
-      if (window.scrollY + window.innerHeight === height) {
+      if (
+        Math.round(window.scrollY + window.innerHeight) === Math.round(height)
+      ) {
         fetchNextPage();
       }
     }
