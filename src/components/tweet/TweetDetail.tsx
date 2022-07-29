@@ -1,3 +1,4 @@
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import React from "react";
 import useTweets from "~/hooks/useTweets";
 import { ITweet } from "~/type";
@@ -12,6 +13,7 @@ interface Props {
 const TweetDetail: React.FC<Props> = ({ data }) => {
   const user = useUser();
   const { data: tweetsData } = useTweets({ type: "replies", replyTo: data.id });
+  const [parent] = useAutoAnimate<HTMLDivElement>();
 
   return (
     <div className="bg-gray-100 dark:bg-black dark:border dark:border-gray_dark max-w-[600px] flex-grow min-h-screen main-border">
@@ -23,9 +25,11 @@ const TweetDetail: React.FC<Props> = ({ data }) => {
           Login to reply
         </h4>
       )}
-      {tweetsData?.pages.map((page) =>
-        page.tweets.map((tweet) => <Tweet key={tweet.id} tweet={tweet} />)
-      )}
+      <div ref={parent}>
+        {tweetsData?.pages.map((page) =>
+          page.tweets.map((tweet) => <Tweet key={tweet.id} tweet={tweet} />)
+        )}
+      </div>
     </div>
   );
 };

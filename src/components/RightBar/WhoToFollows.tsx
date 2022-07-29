@@ -1,3 +1,4 @@
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import Link from "next/link";
 import React from "react";
 import { useQuery } from "react-query";
@@ -16,6 +17,7 @@ const WhoToFollows = () => {
       refetchOnMount: false,
     }
   );
+  const [parent] = useAutoAnimate<HTMLDivElement>();
   if (!users || users.length === 0) return null;
 
   const followCallback = (userId: string) => {
@@ -32,13 +34,15 @@ const WhoToFollows = () => {
       <div className="flex items-center justify-between px-4 mb-4">
         <h3 className="font-extrabold text-xl">Who to follow</h3>
       </div>
-      {users?.map((user) => (
-        <WhoToFollow
-          key={user.id}
-          user={user}
-          followCallback={followCallback}
-        />
-      ))}
+      <div className="" ref={parent}>
+        {users?.map((user) => (
+          <WhoToFollow
+            key={user.id}
+            user={user}
+            followCallback={followCallback}
+          />
+        ))}
+      </div>
       <div className="hover:bg-gray-200 dark:hover:bg-neutral-800 cursor-pointer text-blue-500 rounded-b-xl p-4">
         Show more
       </div>

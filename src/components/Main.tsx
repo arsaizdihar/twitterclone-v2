@@ -1,3 +1,4 @@
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import React from "react";
 import useTweets from "~/hooks/useTweets";
 import { useUser } from "./AuthContext";
@@ -13,6 +14,8 @@ const Main: React.FC<{}> = () => {
   const { data, isFetchingNextPage, fetchNextPage } = useTweets({
     type: "timeline",
   });
+  const [parent] = useAutoAnimate<HTMLDivElement>();
+
   return (
     <div className="dark:bg-black max-w-[600px] flex-grow min-h-screen">
       <div className="bg-white dark:bg-black px-4 py-2 flex items-center main-border">
@@ -36,7 +39,7 @@ const Main: React.FC<{}> = () => {
         </div>
       </div>
       {user !== null && <TweetInput resetPage={() => null} />}
-      <div>
+      <div ref={parent}>
         {data?.pages.map((page, idx) =>
           page.tweets.map((tweet) => <Tweet key={tweet.id} tweet={tweet} />)
         )}
