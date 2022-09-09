@@ -5,7 +5,7 @@ import { request } from "~/utils/api";
 export const AuthContext = React.createContext<{
   user: ISimpleUser | null;
   setUser: React.Dispatch<React.SetStateAction<ISimpleUser | null>>;
-}>(null as any);
+}>({} as any);
 
 export const AuthProvider: React.FC<{
   children?: React.ReactNode;

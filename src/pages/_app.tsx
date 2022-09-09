@@ -6,12 +6,12 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { AuthProvider } from "~/components/AuthContext";
 import { PageDataProvider } from "~/components/PageDataContext";
 import queryClient from "~/utils/queryClient";
-import "../styles/globals.css";
+import "../../styles/globals.css";
 
 function DefaultLayout({ children }: { children?: React.ReactNode }) {
   return <>{children}</>;
 }
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps<any>) {
   const Layout = (Component as any).Layout || DefaultLayout;
   return (
     <QueryClientProvider client={queryClient}>
