@@ -60,7 +60,7 @@ const FollowList: React.FC<Props> = ({ followLists }) => {
             <div className="flex justify-between">
               <div className="leading-none">
                 <div className="flex">
-                  <Link href={`/user/${f.username}`}>
+                  <Link href={`/${f.username}`}>
                     <a className="font-bold hover:underline">{f.displayName}</a>
                   </Link>
                   {f.private && <Private />}

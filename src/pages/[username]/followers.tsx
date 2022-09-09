@@ -1,4 +1,3 @@
-import React from "react";
 import BasicLayout from "~/components/BasicLayout";
 import Head from "~/components/Head";
 import { usePageData } from "~/components/PageDataContext";
@@ -40,6 +39,7 @@ export const getServerSideProps = withSession({
             id: true,
             username: true,
             photoUrl: true,
+            private: true,
             displayName: true,
             followers: userId
               ? {
@@ -79,6 +79,7 @@ export const getServerSideProps = withSession({
               ...f,
               isFollowed: f.followers && f.followers.length > 0,
               isRequested: f.followerRequests && f.followerRequests.length > 0,
+              isSelf: f.id === userId,
             })),
           })
         ),

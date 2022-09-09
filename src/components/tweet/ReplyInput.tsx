@@ -59,7 +59,7 @@ const ReplyInput: React.FC<{ tweetUser: ISimpleUser; tweetId: string }> = ({
       <div className="flex flex-grow flex-col">
         <p className="text-gray-400 text-sm">
           Replying to{" "}
-          <Link href={`/user/${tweetUser.username}`}>
+          <Link href={`/${tweetUser.username}`}>
             <a className="text-blue-500">@{tweetUser.username}</a>
           </Link>
         </p>
