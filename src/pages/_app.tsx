@@ -1,5 +1,6 @@
 import { ThemeProvider, useTheme } from "next-themes";
 import type { AppProps } from "next/app";
+import NextNProgress from "nextjs-progressbar";
 import { Toaster } from "react-hot-toast";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -18,6 +19,7 @@ function MyApp({ Component, pageProps }: AppProps<any>) {
       <ThemeProvider attribute="class">
         <PageDataProvider data={pageProps.data}>
           <AuthProvider user={pageProps.user || null}>
+            <NextNProgress color="rgb(59 130 246)" />
             <Layout>
               <Component {...pageProps} />
             </Layout>

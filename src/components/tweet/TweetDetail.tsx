@@ -3,6 +3,7 @@ import React from "react";
 import useTweets from "~/hooks/useTweets";
 import { ITweet } from "~/type";
 import { useUser } from "../AuthContext";
+import Spinner from "../main/Spinner";
 import ReplyInput from "./ReplyInput";
 import Tweet from "./Tweet";
 
@@ -12,7 +13,11 @@ interface Props {
 
 const TweetDetail: React.FC<Props> = ({ data }) => {
   const user = useUser();
-  const { data: tweetsData } = useTweets({ type: "replies", replyTo: data.id });
+  const {
+    data: tweetsData,
+    isFetchingNextPage,
+    isLoading,
+  } = useTweets({ type: "replies", replyTo: data.id });
   const [parent] = useAutoAnimate<HTMLDivElement>();
 
   return (
@@ -28,6 +33,11 @@ const TweetDetail: React.FC<Props> = ({ data }) => {
       <div ref={parent}>
         {tweetsData?.pages.map((page) =>
           page.tweets.map((tweet) => <Tweet key={tweet.id} tweet={tweet} />)
+        )}
+        {(isFetchingNextPage || isLoading) && (
+          <div className="w-full flex justify-center my-2">
+            <Spinner />
+          </div>
         )}
       </div>
     </div>

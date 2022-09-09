@@ -1,5 +1,4 @@
 import { GetServerSideProps } from "next";
-import React from "react";
 import { useUser } from "~/components/AuthContext";
 import BasicLayout from "~/components/BasicLayout";
 import Head from "~/components/Head";

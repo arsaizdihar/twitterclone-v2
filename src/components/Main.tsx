@@ -11,7 +11,7 @@ import TweetInput from "./tweet/TweetInput";
 const Main: React.FC<{}> = () => {
   const { setIsOpen } = useNavigationOpen();
   const user = useUser();
-  const { data, isFetchingNextPage, fetchNextPage } = useTweets({
+  const { data, isFetchingNextPage, fetchNextPage, isLoading } = useTweets({
     type: "timeline",
   });
   const [parent] = useAutoAnimate<HTMLDivElement>();
@@ -43,7 +43,7 @@ const Main: React.FC<{}> = () => {
         {data?.pages.map((page, idx) =>
           page.tweets.map((tweet) => <Tweet key={tweet.id} tweet={tweet} />)
         )}
-        {isFetchingNextPage && (
+        {(isFetchingNextPage || isLoading) && (
           <div className="w-full flex justify-center my-2">
             <Spinner />
           </div>

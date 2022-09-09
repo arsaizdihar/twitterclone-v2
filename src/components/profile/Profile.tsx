@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import useTweets from "~/hooks/useTweets";
 import { IUserProfile } from "~/type";
 import { Private, Verified } from "../icons";
+import Spinner from "../main/Spinner";
 import Tweet from "../tweet/Tweet";
 
 interface Props {
@@ -123,7 +124,7 @@ const Profile: React.FC<Props> = ({ isCurrentUser, user, username }) => {
 function ProfileTweets() {
   const router = useRouter();
   const username = router.query.username as string;
-  const { data, isFetchingNextPage, fetchNextPage } = useTweets({
+  const { data, isFetchingNextPage, fetchNextPage, isLoading } = useTweets({
     type: "profile",
     username,
   });
@@ -131,6 +132,11 @@ function ProfileTweets() {
     <>
       {data?.pages.map((page) =>
         page.tweets.map((tweet) => <Tweet key={tweet.id} tweet={tweet} />)
+      )}
+      {(isFetchingNextPage || isLoading) && (
+        <div className="w-full flex justify-center my-2">
+          <Spinner />
+        </div>
       )}
     </>
   );
