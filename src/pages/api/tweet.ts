@@ -43,7 +43,12 @@ handler.post(authOnly, async (req, res) => {
         })
       );
       results.forEach((result) => {
-        urls.push(result.Location);
+        urls.push(
+          result.Location.replace(
+            process.env.S3_ENDPOINT!,
+            process.env.S3_PUBLIC_DOMAIN!
+          )
+        );
       });
     }
     const userId = getUserId(req, res)!;

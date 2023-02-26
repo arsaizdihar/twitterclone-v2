@@ -7,10 +7,20 @@ import { getUserId } from "~/server/user";
 const handler = createHandler();
 
 function urlToKey(url: string) {
-  if (url.startsWith("https://is3.cloudhost.id/twitter/")) {
-    return url.replace("https://is3.cloudhost.id/twitter/", "");
+  if (
+    url.startsWith(
+      `https://${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET}/`
+    )
+  ) {
+    return url.replace(
+      `https://${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET}/`,
+      ""
+    );
   } else {
-    return url.replace("https://twitter.is3.cloudhost.id/", "");
+    return url.replace(
+      `https://${process.env.S3_BUCKET}/${process.env.S3_ENDPOINT}/`,
+      ""
+    );
   }
 }
 
