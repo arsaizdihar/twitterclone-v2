@@ -9,16 +9,16 @@ const handler = createHandler();
 function urlToKey(url: string) {
   if (
     url.startsWith(
-      `https://${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET}/`
+      `https://${process.env.S3_PUBLIC_DOMAIN}/${process.env.S3_BUCKET}/`
     )
   ) {
     return url.replace(
-      `https://${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET}/`,
+      `https://${process.env.S3_PUBLIC_DOMAIN}/${process.env.S3_BUCKET}/`,
       ""
     );
   } else {
     return url.replace(
-      `https://${process.env.S3_BUCKET}/${process.env.S3_ENDPOINT}/`,
+      `https://${process.env.S3_BUCKET}/${process.env.S3_PUBLIC_DOMAIN}/`,
       ""
     );
   }
