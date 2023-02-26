@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["is3.cloudhost.id"],
+    domains: [process.env.S3_PUBLIC_DOMAIN],
   },
 };
 

@@ -30,7 +30,7 @@ handler.post(authOnly, async (req, res) => {
           const fileStream = fs.createReadStream(file.filepath);
           return s3
             .upload({
-              Bucket: "twitter",
+              Bucket: process.env.S3_BUCKET!,
               Key:
                 new Date().getTime().toString() +
                 "-" +

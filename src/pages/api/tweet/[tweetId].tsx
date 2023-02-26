@@ -21,7 +21,7 @@ handler.delete(authOnly, async (req, res) => {
   const [result, tweet, media] = await Promise.all([
     s3
       .deleteObjects({
-        Bucket: "twitter",
+        Bucket: process.env.S3_BUCKET!,
         Delete: { Objects: medias.map((m) => ({ Key: urlToKey(m.url) })) },
       })
       .promise(),

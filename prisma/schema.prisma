@@ -25,10 +25,10 @@ model User {
   tweets            Tweet[]
   likes             TweetLike[]
   retweets          TweetRetweet[]
-  followers         User[]         @relation(name: "UserFollow", references: [id])
-  following         User[]         @relation(name: "UserFollow", references: [id])
-  followingRequests User[]         @relation(name: "UserFollowRequest", references: [id])
-  followerRequests  User[]         @relation(name: "UserFollowRequest", references: [id])
+  followers         User[]         @relation(name: "UserFollow")
+  following         User[]         @relation(name: "UserFollow")
+  followingRequests User[]         @relation(name: "UserFollowRequest")
+  followerRequests  User[]         @relation(name: "UserFollowRequest")
   media             Media[]
 }
 
