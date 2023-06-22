@@ -1,4 +1,3 @@
-import React from "react";
 import BasicLayout from "~/components/BasicLayout";
 import Head from "~/components/Head";
 import { usePageData } from "~/components/PageDataContext";
@@ -7,6 +6,7 @@ import db from "~/server/prisma";
 import { getUserId, SIMPLE_USER_QUERY } from "~/server/user";
 import { withSession } from "~/server/withSession";
 import { ITweet } from "~/type";
+import { canAccessAccount } from "~/utils/private";
 
 export const getServerSideProps = withSession({
   force: false,
@@ -14,6 +14,11 @@ export const getServerSideProps = withSession({
     const username = ctx.query.username as string;
     const tweetId = ctx.query.tweetId as string;
     const userId = getUserId(ctx.req, ctx.res);
+    if (!(await canAccessAccount(username, userId))) {
+      return {
+        notFound: true,
+      };
+    }
 
     const tweet = await db.tweet.findFirst({
       where: {

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { ISimpleUser } from "~/type";
 import { request } from "~/utils/api";
 
@@ -21,12 +22,13 @@ export const AuthProvider: React.FC<{
 
 export const useUser = () => {
   const { user, setUser } = React.useContext(AuthContext);
-  const fetched = useRef(false);
+  const { data, isLoading } = useQuery(["me"], () =>
+    request({ url: "/api/me" })
+  );
   useEffect(() => {
-    if (!user && !fetched.current) {
-      fetched.current = true;
-      request({ url: "/api/me" }).then((user) => setUser(user));
+    if (!isLoading) {
+      setUser(data ?? null);
     }
-  }, [user, setUser]);
+  }, [data, setUser, isLoading]);
   return user;
 };

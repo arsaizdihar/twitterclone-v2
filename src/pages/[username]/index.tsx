@@ -8,11 +8,17 @@ import db from "~/server/prisma";
 import { getUserId } from "~/server/user";
 import { withSession } from "~/server/withSession";
 import { IUserProfile } from "~/type";
+import { canAccessAccount } from "~/utils/private";
 
 export const getServerSideProps: GetServerSideProps = withSession({
   force: false,
   handler: async (ctx) => {
     const userId = getUserId(ctx.req, ctx.res);
+    if (!(await canAccessAccount(ctx.query.username as string, userId))) {
+      return {
+        notFound: true,
+      };
+    }
     const user = await db.user.findUnique({
       where: { username: ctx.query.username as string },
       include: {
@@ -23,33 +29,8 @@ export const getServerSideProps: GetServerSideProps = withSession({
             tweets: true,
           },
         },
-        followers: userId
-          ? {
-              where: {
-                id: userId,
-              },
-              select: { id: true },
-            }
-          : undefined,
       },
     });
-    if (!user) {
-      return {
-        notFound: true,
-      };
-    }
-    if (user.private) {
-      if (userId === user.id || (userId && user.followers.length > 0)) {
-        return {
-          props: {
-            data: JSON.parse(JSON.stringify(user)),
-          },
-        };
-      }
-      return {
-        notFound: true,
-      };
-    }
     return {
       props: {
         data: JSON.parse(JSON.stringify(user)),

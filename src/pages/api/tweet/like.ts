@@ -8,7 +8,6 @@ const handler = createHandler();
 handler.post(authOnly, async (req, res) => {
   const userId = getUserId(req, res)!;
   const { tweetId } = req.body;
-  console.log(tweetId);
   if (typeof tweetId !== "string") {
     res.status(400).send({
       error: "Invalid tweetId",

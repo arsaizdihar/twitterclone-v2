@@ -12,8 +12,8 @@ import { deleteTweet, likeTweet } from "~/utils/api/tweet";
 import { getTweetTimeString } from "~/utils/getTweetTimeString";
 import queryClient from "~/utils/queryClient";
 import { useUser } from "../AuthContext";
-import { Private, ThreeDots, Verified } from "../icons";
 import Modal from "../Modal";
+import { Private, ThreeDots, Verified } from "../icons";
 import ProfilePic from "../profile/ProfilePic";
 
 function updateQueryWrapper(tweet: any) {
@@ -80,6 +80,7 @@ const Tweet: React.FC<{
     const promise = deleteTweet(tweet.id).then(() => {
       setIsDelete(false);
       queryClient.invalidateQueries("tweets");
+      queryClient.invalidateQueries("replies");
       queryClient.invalidateQueries(["profileTweets", user?.username]);
     });
 

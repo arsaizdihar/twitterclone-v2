@@ -6,6 +6,7 @@ import FollowList from "~/components/profile/FollowList";
 import db from "~/server/prisma";
 import { getUserId } from "~/server/user";
 import { withSession } from "~/server/withSession";
+import { canAccessAccount } from "~/utils/private";
 
 type PageData = {
   id: string;
@@ -26,6 +27,11 @@ export const getServerSideProps = withSession({
   handler: async (ctx) => {
     const username = ctx.query.username as string;
     const userId = getUserId(ctx.req, ctx.res);
+    if (!(await canAccessAccount(username, userId))) {
+      return {
+        notFound: true,
+      };
+    }
     const user = await db.user.findUnique({
       where: {
         username,

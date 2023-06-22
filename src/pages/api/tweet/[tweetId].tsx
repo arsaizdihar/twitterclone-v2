@@ -29,12 +29,14 @@ handler.delete(authOnly, async (req, res) => {
   const tweetId = req.query.tweetId as string;
   const medias = await db.media.findMany({ where: { tweetId } });
   const [result, tweet, media] = await Promise.all([
-    s3
-      .deleteObjects({
-        Bucket: process.env.S3_BUCKET!,
-        Delete: { Objects: medias.map((m) => ({ Key: urlToKey(m.url) })) },
-      })
-      .promise(),
+    medias.length
+      ? s3
+          .deleteObjects({
+            Bucket: process.env.S3_BUCKET!,
+            Delete: { Objects: medias.map((m) => ({ Key: urlToKey(m.url) })) },
+          })
+          .promise()
+      : undefined,
     db.tweet.deleteMany({ where: { id: tweetId, userId } }),
     db.media.deleteMany({ where: { tweetId } }),
   ]);
